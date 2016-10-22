@@ -25,3 +25,6 @@ insert into pais values
 ('','Japão'),
 ('','França'),
 ('','Alemanha');
+
+
+mysql> SET foreign_key_checks = 0;
