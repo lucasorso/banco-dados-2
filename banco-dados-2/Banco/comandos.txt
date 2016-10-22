@@ -1,0 +1,27 @@
+insert into bairro values ('','China Town');
+
+select * from bairro;
+
+insert into cidade values ('','Maringá');
+
+select * from cidade;
+
+insert into estado values
+('','Santa Catarina'),
+('','New York'),
+('','Rio Grande do Sul'),
+('','Paraná'),
+('','California'),
+('','Rio de Janeiro'),
+('','São Paulo');
+
+select * from estado;
+
+insert into pais values
+('','Brasil'),
+('','EUA'),
+('','Chpaisina'),
+('','México'),
+('','Japão'),
+('','França'),
+('','Alemanha');
