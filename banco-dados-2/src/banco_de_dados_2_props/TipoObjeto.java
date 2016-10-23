@@ -16,7 +16,7 @@ public class TipoObjeto {
     public static String CIDADE = "Cidade";
     public static String ESTADO = "Estado";
     public static String PAIS = "Pais";
-
+    public static String NOME = "Nome";
 //    public static enum Tipo {
 //
 //        LOGRADOURO("Logradouro"), BAIRRO("Bairro"), CIDADE("Cidade"), ESTADO("Estador"), PAIS("Pais");
@@ -40,4 +40,5 @@ public class TipoObjeto {
 //            throw new IllegalArgumentException("codigo invalido");
 //        }
 //    }
+    
 }

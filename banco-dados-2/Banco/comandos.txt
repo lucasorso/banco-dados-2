@@ -28,3 +28,30 @@ insert into pais values
 
 
 mysql> SET foreign_key_checks = 0;
+
+/*SELECT p.*, c.`nome` AS categoria, u.`nome` AS usuario FROM `produtos` AS p
+  INNER JOIN `categorias` AS c ON p.`categoria_id` = c.`id`
+  INNER JOIN `usuarios` AS u ON p.`usuario_id` = u.`id`
+  WHERE (p.`ativo` = 1) ORDER BY p.`nome` ASC*/
+
+SELECT p.nome, 
+	l.nome AS logradouro, 
+	b.nome AS bairro,
+    c.nome AS cidade,
+    e.nome AS estado,
+    pa.nome AS pais
+    FROM pessoas AS p
+	INNER JOIN logradouro AS l ON p.logradouroIdLogradouro = l.idLogradouro
+	INNER JOIN bairro AS b ON p.bairroIdBairro = b.idBairro
+	INNER JOIN cidade AS c ON P.cidadeIdCidade = c.idCidade
+    INNER JOIN estado AS e ON p.estadoIdEstado = e.idEstado
+    INNER JOIN pais AS pa ON p.paisIdPais = pa.idPais;
+  
+ALTER TABLE `ly`.`pais` 
+CHANGE COLUMN `nomePais` `nome` VARCHAR(50) NULL DEFAULT NULL ;
+
+ALTER TABLE `ly2`.`Pais` 
+CHANGE COLUMN `nomePais` `nome` VARCHAR(50) NULL DEFAULT NULL ;
+
+UPDATE `ly1`.`pessoas` SET `logradouroIdLogradouro`='2', `bairroIdBairro`='3', `estadoIdEstado`='1' WHERE `idPessoa`='2';
+

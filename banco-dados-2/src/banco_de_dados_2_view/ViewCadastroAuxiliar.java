@@ -6,7 +6,9 @@
 package banco_de_dados_2_view;
 
 import banco_de_dados_2_beans.ObjectsBD;
+import banco_de_dados_2_beans.Pessoas;
 import banco_de_dados_2_controller.ControleGenerico;
+import banco_de_dados_2_controller.PessoasDAO;
 import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JTable;
@@ -26,6 +28,23 @@ public class ViewCadastroAuxiliar extends JFrame {
     private List<ObjectsBD> mList;
 
     private void criarJtable(List<ObjectsBD> list) {
+        modelo = new DefaultTableModel();
+        tabela = new JTable(modelo);
+
+        modelo.addColumn("ID");
+        modelo.addColumn("Nome");
+
+        tabela.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        tabela.getColumnModel().getColumn(0).setPreferredWidth(500);
+        tabela.getColumnModel().getColumn(1).setPreferredWidth(10000);
+
+        list.stream().forEach((objects) -> {
+            modelo.addRow(new Object[]{objects.getId(), objects.getNome()});
+        });
+        this.jScrollPane1.setViewportView(tabela);
+    }
+    
+    private void criarJtablePessoas(List<Pessoas> list) {
         modelo = new DefaultTableModel();
         tabela = new JTable(modelo);
 
@@ -72,6 +91,18 @@ public class ViewCadastroAuxiliar extends JFrame {
                 sql += "pais";
                 mList = ControleGenerico.getAll(sql);
                 criarJtable(mList);
+            }
+            case "Nome" : {
+                sql = "SELECT p.nome, l.nome AS logradouro, b.nome AS bairro, c.nome AS cidade, e.nome AS estado, pa.nome AS pais"
+                        + " FROM pessoas AS p"
+                        + " INNER JOIN logradouro AS l ON p.logradouroIdLogradouro = l.idLogradouro"
+                        + " INNER JOIN bairro AS b ON p.bairroIdBairro = b.idBairro"
+                        + " INNER JOIN cidade AS c ON P.cidadeIdCidade = c.idCidade"
+                        + " INNER JOIN estado AS e ON p.estadoIdEstado = e.idEstado"
+                        + " INNER JOIN pais AS pa ON p.paisIdPais = pa.idPais"
+                        + " ORDER BY p.nome ASC;";
+                List<Pessoas> mListPessoas = PessoasDAO.getAll(sql);
+                criarJtablePessoas(mListPessoas);
             }
             break;
         }

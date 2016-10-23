@@ -258,6 +258,11 @@ public class ViewMain extends JFrame {
         campoTextoPais.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         botaoNome.setText("...");
+        botaoNome.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoNomeActionPerformed(evt);
+            }
+        });
 
         botaoLogradouro.setText("...");
         botaoLogradouro.addActionListener(new java.awt.event.ActionListener() {
@@ -520,7 +525,7 @@ public class ViewMain extends JFrame {
     }//GEN-LAST:event_botaoBairroActionPerformed
 
     private void botaoInclusaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoInclusaoActionPerformed
-
+        
     }//GEN-LAST:event_botaoInclusaoActionPerformed
 
     private void botaoCidadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCidadeActionPerformed
@@ -534,6 +539,10 @@ public class ViewMain extends JFrame {
     private void botaoPaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoPaisActionPerformed
         abreCadastroAuxiliar(TipoObjeto.PAIS);
     }//GEN-LAST:event_botaoPaisActionPerformed
+
+    private void botaoNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoNomeActionPerformed
+        abreCadastroAuxiliar(TipoObjeto.NOME);
+    }//GEN-LAST:event_botaoNomeActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botaoAlteracao;
