@@ -8,7 +8,7 @@ package banco_de_dados_2_view;
 import banco_de_dados_2_beans.ObjectsBD;
 import banco_de_dados_2_beans.Pessoas;
 import banco_de_dados_2_controller.ControleGenerico;
-import banco_de_dados_2_controller.PessoasDAO;
+import static java.util.Collections.list;
 import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JTable;
@@ -31,78 +31,91 @@ public class ViewCadastroAuxiliar extends JFrame {
         modelo = new DefaultTableModel();
         tabela = new JTable(modelo);
 
-        modelo.addColumn("ID");
-        modelo.addColumn("Nome");
+        if (tipoObjeto == "pessoas") {
+            modelo.addColumn("ID");
+            modelo.addColumn("Nome");
+            modelo.addColumn("Logradouro");
+            modelo.addColumn("Bairro");
+            modelo.addColumn("Cidade");
+            modelo.addColumn("Estado");
+            modelo.addColumn("Pais");
 
-        tabela.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-        tabela.getColumnModel().getColumn(0).setPreferredWidth(500);
-        tabela.getColumnModel().getColumn(1).setPreferredWidth(10000);
+            tabela.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+            tabela.getColumnModel().getColumn(0).setPreferredWidth(600);
+            tabela.getColumnModel().getColumn(1).setPreferredWidth(10000);
+            tabela.getColumnModel().getColumn(2).setPreferredWidth(10000);
+            tabela.getColumnModel().getColumn(3).setPreferredWidth(10000);
+            tabela.getColumnModel().getColumn(4).setPreferredWidth(10000);
+            tabela.getColumnModel().getColumn(5).setPreferredWidth(10000);
+            tabela.getColumnModel().getColumn(6).setPreferredWidth(10000);
 
-        list.stream().forEach((objects) -> {
-            modelo.addRow(new Object[]{objects.getId(), objects.getNome()});
-        });
-        this.jScrollPane1.setViewportView(tabela);
-    }
-    
-    private void criarJtablePessoas(List<Pessoas> list) {
-        modelo = new DefaultTableModel();
-        tabela = new JTable(modelo);
+            Pessoas p = new Pessoas();
+            for (ObjectsBD pe : list) {
+                if (pe instanceof Pessoas) {
+                    System.out.println(pe.toString());
+                    p = (Pessoas) pe;
+                    modelo.addRow(new Object[]{p.getId(), p.getNome(), p.getLogradouro().getNome(),
+                        p.getBairro().getNome(), p.getCidade().getNome(), p.getEstado().getNome(),
+                        p.getPais().getNome()});
+                }
+            }
+        } else {
+            modelo.addColumn("ID");
+            modelo.addColumn("Nome");
 
-        modelo.addColumn("ID");
-        modelo.addColumn("Nome");
+            tabela.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+            tabela.getColumnModel().getColumn(0).setPreferredWidth(500);
+            tabela.getColumnModel().getColumn(1).setPreferredWidth(10000);
 
-        tabela.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-        tabela.getColumnModel().getColumn(0).setPreferredWidth(500);
-        tabela.getColumnModel().getColumn(1).setPreferredWidth(10000);
-
-        list.stream().forEach((objects) -> {
-            modelo.addRow(new Object[]{objects.getId(), objects.getNome()});
-        });
+            list.stream().forEach((objects) -> {
+                modelo.addRow(new Object[]{objects.getId(), objects.getNome()});
+            });
+        }
         this.jScrollPane1.setViewportView(tabela);
     }
 
     private void configuraSQL(String tipoObjeto) {
         switch (tipoObjeto) {
-            case "Logradouro": {
+            case "logradouro": {
                 sql += "logradouro";
-                mList = ControleGenerico.getAll(sql);
+                mList = ControleGenerico.getAll(sql, tipoObjeto);
                 criarJtable(mList);
             }
             break;
-            case "Bairro": {
+            case "bairro": {
                 sql += "bairro";
-                mList = ControleGenerico.getAll(sql);
+                mList = ControleGenerico.getAll(sql, tipoObjeto);
                 criarJtable(mList);
             }
             break;
-            case "Cidade": {
+            case "cidade": {
                 sql += "cidade";
-                mList = ControleGenerico.getAll(sql);
+                mList = ControleGenerico.getAll(sql, tipoObjeto);
                 criarJtable(mList);
             }
             break;
-            case "Estado": {
+            case "estado": {
                 sql += "estado";
-                mList = ControleGenerico.getAll(sql);
+                mList = ControleGenerico.getAll(sql, tipoObjeto);
                 criarJtable(mList);
             }
             break;
-            case "Pais": {
+            case "pais": {
                 sql += "pais";
-                mList = ControleGenerico.getAll(sql);
+                mList = ControleGenerico.getAll(sql, tipoObjeto);
                 criarJtable(mList);
             }
-            case "Nome" : {
-                sql = "SELECT p.nome, l.nome AS logradouro, b.nome AS bairro, c.nome AS cidade, e.nome AS estado, pa.nome AS pais"
-                        + " FROM pessoas AS p"
-                        + " INNER JOIN logradouro AS l ON p.logradouroIdLogradouro = l.idLogradouro"
-                        + " INNER JOIN bairro AS b ON p.bairroIdBairro = b.idBairro"
-                        + " INNER JOIN cidade AS c ON P.cidadeIdCidade = c.idCidade"
-                        + " INNER JOIN estado AS e ON p.estadoIdEstado = e.idEstado"
-                        + " INNER JOIN pais AS pa ON p.paisIdPais = pa.idPais"
-                        + " ORDER BY p.nome ASC;";
-                List<Pessoas> mListPessoas = PessoasDAO.getAll(sql);
-                criarJtablePessoas(mListPessoas);
+            break;
+            case "pessoas": {
+                sql = "SELECT p.*, l.nome AS logradouro, b.nome AS bairro, c.nome AS cidade, e.nome AS estado, pa.nome AS pais \n"
+                        + "FROM pessoas AS p \n"
+                        + "INNER JOIN logradouro AS l ON p.logradouroIdLogradouro = l.idLogradouro \n"
+                        + "INNER JOIN bairro AS b ON p.bairroIdBairro = b.idBairro \n"
+                        + "INNER JOIN cidade AS c ON P.cidadeIdCidade = c.idCidade\n"
+                        + "INNER JOIN estado AS e ON p.estadoIdEstado = e.idEstado \n"
+                        + "INNER JOIN pais AS pa ON p.paisIdPais = pa.idPais";
+                mList = ControleGenerico.getAll(sql, tipoObjeto);
+                criarJtable(mList);
             }
             break;
         }
@@ -242,11 +255,8 @@ public class ViewCadastroAuxiliar extends JFrame {
     private void botaoOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoOkActionPerformed
         if (tabela.getSelectedRow() != -1) {
             ObjectsBD obj = new ObjectsBD();
-            Object ob = (modelo.getDataVector().elementAt(tabela.getSelectedRow()));
-            System.out.println(ob.toString());
-            String[] teste = ob.toString().split(",");
-            obj.setId(Integer.parseInt(teste[0].replace("[", "").trim()));
-            obj.setNome(teste[1].replace("]", "").trim());
+            int position = tabela.getSelectedRow();
+            obj = mList.get(position);
             viewMain.setSelectObjetct(tipoObjeto, obj);
             dispose();
         } else {

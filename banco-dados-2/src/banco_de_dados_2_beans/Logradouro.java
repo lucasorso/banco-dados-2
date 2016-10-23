@@ -10,6 +10,14 @@ package banco_de_dados_2_beans;
  * @author Lucas
  */
 public class Logradouro extends ObjectsBD{
+    
+    int numero;
 
-    public Logradouro() {}
+    public int getNumero() {
+        return numero;
+    }
+
+    public void setNumero(int numero) {
+        this.numero = numero;
+    }    
 }

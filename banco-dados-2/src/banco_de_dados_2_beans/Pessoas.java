@@ -9,8 +9,7 @@ package banco_de_dados_2_beans;
  *
  * @author Lucas
  */
-public class Pessoas {
-    
+public class Pessoas extends ObjectsBD{
     private int _id;
     private String nome;
     
@@ -20,60 +19,63 @@ public class Pessoas {
     private Estado mEstado;
     private Pais mPais;
 
+    @Override
     public int getId() {
         return _id;
     }
 
+    @Override
     public void setId(int _id) {
         this._id = _id;
     }
-
+    
+    @Override
     public String getNome() {
         return nome;
     }
-
+    
+    @Override
     public void setNome(String nome) {
         this.nome = nome;
     }
 
-    public Logradouro getmLogradouro() {
+    public Logradouro getLogradouro() {
         return mLogradouro;
     }
 
-    public void setmLogradouro(Logradouro mLogradouro) {
+    public void setLogradouro(Logradouro mLogradouro) {
         this.mLogradouro = mLogradouro;
     }
 
-    public Bairro getmBairro() {
+    public Bairro getBairro() {
         return mBairro;
     }
 
-    public void setmBairro(Bairro mBairro) {
+    public void setBairro(Bairro mBairro) {
         this.mBairro = mBairro;
     }
 
-    public Cidade getmCidade() {
+    public Cidade getCidade() {
         return mCidade;
     }
 
-    public void setmCidade(Cidade mCidade) {
+    public void setCidade(Cidade mCidade) {
         this.mCidade = mCidade;
     }
 
-    public Estado getmEstado() {
+    public Estado getEstado() {
         return mEstado;
     }
 
-    public void setmEstado(Estado mEstado) {
+    public void setEstado(Estado mEstado) {
         this.mEstado = mEstado;
     }
 
-    public Pais getmPais() {
+    public Pais getPais() {
         return mPais;
     }
 
-    public void setmPais(Pais mPais) {
+    public void setPais(Pais mPais) {
         this.mPais = mPais;
     }
-    
 }

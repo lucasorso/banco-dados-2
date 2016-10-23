@@ -9,14 +9,14 @@ package banco_de_dados_2_props;
  *
  * @author Lucas
  */
-public class TipoObjeto {
+public class TipoObjetoProps {
 
-    public static String LOGRADOURO = "Logradouro";
-    public static String BAIRRO = "Bairro";
-    public static String CIDADE = "Cidade";
-    public static String ESTADO = "Estado";
-    public static String PAIS = "Pais";
-    public static String NOME = "Nome";
+    public static String LOGRADOURO = "logradouro";
+    public static String BAIRRO = "bairro";
+    public static String CIDADE = "cidade";
+    public static String ESTADO = "estado";
+    public static String PAIS = "pais";
+    public static String PESSOAS = "pessoas";
 //    public static enum Tipo {
 //
 //        LOGRADOURO("Logradouro"), BAIRRO("Bairro"), CIDADE("Cidade"), ESTADO("Estador"), PAIS("Pais");
@@ -39,6 +39,5 @@ public class TipoObjeto {
 //            }
 //            throw new IllegalArgumentException("codigo invalido");
 //        }
-//    }
-    
+//    } 
 }
