@@ -12,12 +12,17 @@ import banco_de_dados_2_beans.Logradouro;
 import banco_de_dados_2_beans.ObjectsBD;
 import banco_de_dados_2_beans.Pais;
 import banco_de_dados_2_beans.Pessoas;
+import banco_de_dados_2_props.ConexaoProps;
+import banco_de_dados_2_view.ViewMain;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -26,9 +31,18 @@ import java.util.List;
 public class ControleGenerico {
 
     public static List<ObjectsBD> getAll(String sql, String tipoObjeto) {
+
+        Random generator = new Random();
+        int conexaoAleatorio = generator.nextInt(2) + 1;
+
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
+
+        Conexao connection = new Conexao(ConexaoProps.getConexaoProps(conexaoAleatorio));
+        
+        ViewMain.conexao1.setText(ConexaoProps.getConexaoProps(conexaoAleatorio).getCaminhoBanco() + " " + ConexaoProps.getConexaoProps(conexaoAleatorio).getUsuario());
+
         List<ObjectsBD> mObjectList = new ArrayList<>();
         try {
             conn = Conexao.getConnection();
@@ -126,6 +140,8 @@ public class ControleGenerico {
             }
         } catch (SQLException e) {
             System.out.println("ERRO: " + e.getMessage());
+        } catch (NullPointerException e) {
+            JOptionPane.showMessageDialog(ViewMain.dialog, "Verifique conexão com o banco de dados", "Atenão", JOptionPane.ERROR_MESSAGE);
         } finally {
             if (rs != null) {
                 try {
@@ -152,75 +168,135 @@ public class ControleGenerico {
         return mObjectList;
     }
 
-    public static void insert(String tipoObjeto, String nome) {
+    public static void insert(String tipoObjeto, String nome, Pessoas pessoa) {
+        Random generator = new Random();
+        int conexaoAleatorio = generator.nextInt(2) + 1;
         Connection conn = null;
-        PreparedStatement ps = null;
-        try {
+        ViewMain.ProgressBarConexao.setValue(0);
+        ViewMain.ProgressBarConexao.setMaximum(3);
+        int progress = 0;
+        /*For com a quantidade de valores*/
+        for (ConexaoProps c : ConexaoProps.values()) {
+            /*Vai entrar no if caso valor seja igual ao recebido como parâmetro, 
+            caso contrário fara as outras conexões*/
+            if (c.idConexao == conexaoAleatorio) {
+                Conexao connection = new Conexao(ConexaoProps.getConexaoProps(conexaoAleatorio));
+                conn = Conexao.getConnection();
+
+            }
+            Conexao connection = new Conexao(ConexaoProps.getConexaoProps(c.idConexao));
             conn = Conexao.getConnection();
-            String sql = "insert into " + tipoObjeto + "(nome) values(?)";
-            ps = conn.prepareStatement(sql);
 
-            switch (tipoObjeto) {
-                case "logradouro": {
-                    ps.setString(1, nome);
-                }
-                break;
-                case "bairro": {
-                    ps.setString(1, nome);
-                }
-                break;
-                case "cidade": {
-                    ps.setString(1, nome);
-                }
-                break;
-                case "estado": {
-                    ps.setString(1, nome);
-                }
-                break;
-                case "pais": {
-                    ps.setString(1, nome);
-                }
-                break;
-                case "pessoas": {
+            // update progress bar
+            SwingUtilities.invokeLater(new Runnable() {
+                private int progress = c.ordinal() + 1;
 
+                @Override
+                public void run() {
+                    ViewMain.ProgressBarConexao.setValue(this.progress);
                 }
-                break;
+            });
+            
+            if (c.ordinal() == 0 ){
+                ViewMain.conexao1.setText(c.getCaminhoBanco() + " " +c.getUsuario());
             }
-            ps.execute();
-            conn.commit();
-        } catch (SQLException e) {
-            System.out.println("ERRO: " + e.getMessage());
-
-            if (conn != null) {
-                try {
-                    conn.rollback();
-                } catch (SQLException ex) {
-                    System.out.println("ERRO: " + ex.getMessage());
-                }
+            if (c.ordinal() == 1 ){
+                ViewMain.conexao2.setText(c.getCaminhoBanco() + " " +c.getUsuario());
+            }
+            if (c.ordinal() == 2 ){
+                ViewMain.conexao3.setText(c.getCaminhoBanco() + " " +c.getUsuario());
             }
 
-        } finally {
-            if (ps != null) {
-                try {
-                    ps.close();
-                } catch (SQLException ex) {
-                    System.out.println("ERRO: " + ex.getMessage());
+            PreparedStatement ps = null;
+            try {
+                switch (tipoObjeto) {
+                    case "logradouro": {
+                        String sql = "insert into " + tipoObjeto + "(nome) values(?)";
+                        ps = conn.prepareStatement(sql);
+                        ps.setString(1, nome);
+                    }
+                    break;
+                    case "bairro": {
+                        String sql = "insert into " + tipoObjeto + "(nome) values(?)";
+                        ps = conn.prepareStatement(sql);
+                        ps.setString(1, nome);
+                    }
+                    break;
+                    case "cidade": {
+                        String sql = "insert into " + tipoObjeto + "(nome) values(?)";
+                        ps = conn.prepareStatement(sql);
+                        ps.setString(1, nome);
+                    }
+                    break;
+                    case "estado": {
+                        String sql = "insert into " + tipoObjeto + "(nome) values(?)";
+                        ps = conn.prepareStatement(sql);
+                        ps.setString(1, nome);
+                    }
+                    break;
+                    case "pais": {
+                        String sql = "insert into " + tipoObjeto + "(nome) values(?)";
+                        ps = conn.prepareStatement(sql);
+                        ps.setString(1, nome);
+                    }
+                    break;
+                    case "pessoas": {
+                        String sql = "insert into pessoas (nome, logradouroIdLogradouro, bairroIdBairro, cidadeIdCidade, estadoIdEstado, paisIdPais) values(?,?,?,?,?,?)";
+                        ps = conn.prepareStatement(sql);
+                        ps.setString(1, pessoa.getNome());
+                        ps.setInt(2, pessoa.getLogradouro().getId());
+                        ps.setInt(3, pessoa.getBairro().getId());
+                        ps.setInt(4, pessoa.getCidade().getId());
+                        ps.setInt(5, pessoa.getEstado().getId());
+                        ps.setInt(6, pessoa.getPais().getId());
+                    }
+                    break;
                 }
-            }
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException ex) {
-                    System.out.println("ERRO: " + ex.getMessage());
+                ps.execute();
+                conn.commit();
+            } catch (SQLException e) {
+                System.out.println("ERRO: " + e.getMessage());
+
+                if (conn != null) {
+                    try {
+                        conn.rollback();
+                    } catch (SQLException ex) {
+                        System.out.println("ERRO: " + ex.getMessage());
+                    }
+                }
+
+            } finally {
+                if (ps != null) {
+                    try {
+                        ps.close();
+                    } catch (SQLException ex) {
+                        System.out.println("ERRO: " + ex.getMessage());
+                    }
+                }
+                if (conn != null) {
+                    try {
+                        conn.close();
+                    } catch (SQLException ex) {
+                        System.out.println("ERRO: " + ex.getMessage());
+                    }
                 }
             }
         }
     }
 
     public static ObjectsBD select(String tipoObjeto, String nome) {
+
+        Random generator = new Random();
+        int conexaoAleatorio = generator.nextInt(2) + 1;
+
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
+
+        Conexao connection = new Conexao(ConexaoProps.getConexaoProps(conexaoAleatorio));
+        
+        
+
         ObjectsBD obj = new ObjectsBD();
         try {
             conn = Conexao.getConnection();
@@ -230,11 +306,16 @@ public class ControleGenerico {
                     ps.setString(1, nome);
                     rs = ps.executeQuery();
 
-                    Logradouro logradouro = new Logradouro();
-                    logradouro.setId(rs.getInt(1));
-                    logradouro.setNome(rs.getString(2));
+                    if (rs.next()) {
+                        int codigo = rs.getInt(1);
+                        String nomeL = rs.getString(2);
 
-                    obj = logradouro;
+                        Logradouro logradouro = new Logradouro();
+                        logradouro.setId(codigo);
+                        logradouro.setNome(nomeL);
+
+                        obj = logradouro;
+                    }
                 }
                 break;
                 case "bairro": {
@@ -242,12 +323,18 @@ public class ControleGenerico {
                     ps.setString(1, nome);
                     rs = ps.executeQuery();
 
-                    Bairro bairro = new Bairro();
+                    if (rs.next()) {
+                        int codigo = rs.getInt(1);
+                        String nomeB = rs.getString(2);
 
-                    bairro.setId(rs.getInt(1));
-                    bairro.setNome(rs.getString(2));
+                        Bairro bairro = new Bairro();
 
-                    obj = bairro;
+                        bairro.setId(codigo);
+                        bairro.setNome(nomeB);
+
+                        obj = bairro;
+                    }
+
                 }
                 break;
                 case "cidade": {
@@ -255,12 +342,17 @@ public class ControleGenerico {
                     ps.setString(1, nome);
                     rs = ps.executeQuery();
 
-                    Cidade cidade = new Cidade();
+                    if (rs.next()) {
+                        int codigo = rs.getInt(1);
+                        String nomeC = rs.getString(2);
 
-                    cidade.setId(rs.getInt(1));
-                    cidade.setNome(rs.getString(2));
+                        Cidade cidade = new Cidade();
 
-                    obj = cidade;
+                        cidade.setId(codigo);
+                        cidade.setNome(nomeC);
+
+                        obj = cidade;
+                    }
                 }
                 break;
                 case "estado": {
@@ -268,25 +360,36 @@ public class ControleGenerico {
                     ps.setString(1, nome);
                     rs = ps.executeQuery();
 
-                    Estado estado = new Estado();
+                    if (rs.next()) {
+                        int codigo = rs.getInt(1);
+                        String nomeE = rs.getString(2);
 
-                    estado.setId(rs.getInt(1));
-                    estado.setNome(rs.getString(2));
+                        Estado estado = new Estado();
 
-                    obj = estado;
+                        estado.setId(codigo);
+                        estado.setNome(nomeE);
+
+                        obj = estado;
+                    }
+
                 }
                 break;
                 case "pais": {
                     ps = conn.prepareStatement("select * from pais where nome = ?;");
                     ps.setString(1, nome);
                     rs = ps.executeQuery();
-                    
-                    Pais pais = new Pais();
 
-                    pais.setId(rs.getInt(1));
-                    pais.setNome(rs.getString(2));
+                    if (rs.next()) {
+                        int codigo = rs.getInt(1);
+                        String nomeP = rs.getString(2);
 
-                    obj = pais;
+                        Pais pais = new Pais();
+
+                        pais.setId(rs.getInt(1));
+                        pais.setNome(rs.getString(2));
+
+                        obj = pais;
+                    }
                 }
                 break;
                 case "pessoas": {
@@ -320,5 +423,120 @@ public class ControleGenerico {
             }
         }
         return obj;
+    }
+
+    public static void delete(Pessoas pessoa) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = Conexao.getConnection();
+            String sql = "delete from pessoas where id_pessoas = ?";
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, pessoa.getId());
+            ps.execute();
+            conn.commit();
+        } catch (SQLException e) {
+            System.out.println("ERRO: " + e.getMessage());
+
+            if (conn != null) {
+                try {
+                    conn.rollback();
+                } catch (SQLException ex) {
+                    System.out.println("ERRO: " + ex.getMessage());
+                }
+            }
+
+        } finally {
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    System.out.println("ERRO: " + ex.getMessage());
+                }
+            }
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException ex) {
+                    System.out.println("ERRO: " + ex.getMessage());
+                }
+            }
+        }
+    }
+
+    public static void update(Pessoas pessoa) {
+
+        Random generator = new Random();
+        int conexaoAleatorio = generator.nextInt(2) + 1;
+        Connection conn = null;
+
+        ViewMain.ProgressBarConexao.setValue(0);
+        ViewMain.ProgressBarConexao.setMaximum(3);
+        int progress = 0;
+        /*For com a quantidade de valores*/
+        for (ConexaoProps c : ConexaoProps.values()) {
+            /*Vai entrar no if caso valor seja igual ao recebido como parâmetro, 
+            caso contrário fara as outras conexões*/
+            if (c.idConexao == conexaoAleatorio) {
+                Conexao connection = new Conexao(ConexaoProps.getConexaoProps(conexaoAleatorio));
+                conn = Conexao.getConnection();
+
+            }
+            Conexao connection = new Conexao(ConexaoProps.getConexaoProps(c.idConexao));
+            conn = Conexao.getConnection();
+
+            // update progress bar
+            SwingUtilities.invokeLater(new Runnable() {
+                private int progress = c.ordinal() + 1;
+
+                @Override
+                public void run() {
+                    ViewMain.ProgressBarConexao.setValue(this.progress);
+                }
+            });
+
+            PreparedStatement ps = null;
+            try {
+                String sql = "update pessoas set nome = ?,cpf = ?,rg = ?,sexo = ?,rua = ?,cidade = ?,cep = ?,estado = ? where id_pessoas = ?";
+                ps = conn.prepareStatement(sql);
+                ps.setString(1, pessoa.getNome());
+                // ps.setString(2, pessoa.getCpf());
+                // ps.setString(3, pessoa.getRg());
+                //// ps.setString(4, pessoa.getSexo());
+                // ps.setString(5, pessoa.getRua());
+                // ps.setString(6, pessoa.getCidade());
+                // ps.setString(7, pessoa.getCep());
+                //ps.setString(8, pessoa.getEstado());
+                ps.setInt(9, pessoa.getId());
+                ps.execute();
+                conn.commit();
+            } catch (SQLException e) {
+                System.out.println("ERRO: " + e.getMessage());
+
+                if (conn != null) {
+                    try {
+                        conn.rollback();
+                    } catch (SQLException ex) {
+                        System.out.println("ERRO: " + ex.getMessage());
+                    }
+                }
+
+            } finally {
+                if (ps != null) {
+                    try {
+                        ps.close();
+                    } catch (SQLException ex) {
+                        System.out.println("ERRO: " + ex.getMessage());
+                    }
+                }
+                if (conn != null) {
+                    try {
+                        conn.close();
+                    } catch (SQLException ex) {
+                        System.out.println("ERRO: " + ex.getMessage());
+                    }
+                }
+            }
+        }
     }
 }

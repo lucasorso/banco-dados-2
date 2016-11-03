@@ -11,6 +11,7 @@ import banco_de_dados_2_controller.ControleGenerico;
 import static java.util.Collections.list;
 import java.util.List;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 

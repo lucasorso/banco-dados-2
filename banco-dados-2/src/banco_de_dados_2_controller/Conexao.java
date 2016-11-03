@@ -1,22 +1,33 @@
 package banco_de_dados_2_controller;
 
+import banco_de_dados_2_props.ConexaoProps;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Conexao {
+    
+    private static int id;
+    private static String caminhoBanco;
+    private static String usuario;
+    private static String senha;
+    
+    Conexao (ConexaoProps connProps){
+        id = connProps.getIdConexao();
+        caminhoBanco = connProps.getCaminhoBanco();
+        usuario =  connProps.getUsuario();
+        senha = connProps.getSenha();
+    }
    
     public static Connection getConnection() {
         Connection conn = null;
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/ly1?rewriteBatchedStatements=true&relaxAutoCommit=true", "root", "");
+            conn = DriverManager.getConnection(caminhoBanco, usuario, senha);
         } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("Problemas ao conectar no banco de dados");
+            System.out.println("Problemas ao conectar no banco de dados" + e.getMessage());
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            System.out.println("O driver não foi configurado corretametne");
+            System.out.println("O driver não foi configurado corretametne" + e.getMessage());
         }
         return conn;
     }

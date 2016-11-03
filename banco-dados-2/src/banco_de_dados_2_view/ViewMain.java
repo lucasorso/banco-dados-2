@@ -13,8 +13,12 @@ import banco_de_dados_2_beans.ObjectsBD;
 import banco_de_dados_2_beans.Pais;
 import banco_de_dados_2_beans.Pessoas;
 import banco_de_dados_2_controller.ControleGenerico;
+import banco_de_dados_2_props.ConexaoProps;
 import banco_de_dados_2_props.TipoObjetoProps;
+import java.util.Random;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 /**
  *
@@ -22,13 +26,17 @@ import javax.swing.JFrame;
  */
 public class ViewMain extends JFrame {
 
-    private Pessoas pessoaDao;
     private Pessoas pessoa;
     private Logradouro logradouro;
     private Bairro bairro;
     private Cidade cidade;
     private Estado estado;
     private Pais pais;
+    
+    private final int CADASTRO = 1;
+    private final int ALTERACAO = 2;
+    
+    public static JOptionPane dialog = new JOptionPane();
 
     /**
      * Creates new form ViewMain
@@ -98,7 +106,6 @@ public class ViewMain extends JFrame {
                     campoTextoCidade.setText(pessoa.getCidade().getNome());
                     campoTextoEstado.setText(pessoa.getEstado().getNome());
                     campoTextoPais.setText(pessoa.getPais().getNome());
-
                 }
                 break;
             }
@@ -106,60 +113,150 @@ public class ViewMain extends JFrame {
     }
 
     private boolean validarCampos() {
-        if (campoTextoNome.getText().isEmpty()
+        /*Validar campos de textos não escritos*/
+        return !(campoTextoNome.getText().isEmpty()
                 || campoTextoLogradouro.getText().isEmpty()
                 || campoTextoBairro.getText().isEmpty()
                 || campoTextoCidade.getText().isEmpty()
                 || campoTextoEstado.getText().isEmpty()
-                || campoTextoPais.getText().isEmpty()) {
-            return false;
+                || campoTextoPais.getText().isEmpty());
+    }
+
+    private boolean validarObjetosNulos(int opcao) {
+
+        /*Se logradouro for nulo será inserido no banco*/
+        if (logradouro == null) {
+            if (mostraMensagemObjetoNulo(TipoObjetoProps.LOGRADOURO, campoTextoLogradouro.getText())) {
+                ControleGenerico.insert(TipoObjetoProps.LOGRADOURO, campoTextoLogradouro.getText(), null);
+                ObjectsBD obj = ControleGenerico.select(TipoObjetoProps.LOGRADOURO, campoTextoLogradouro.getText());
+                logradouro = (Logradouro) obj;
+                if (logradouro == null) {
+                    return false;
+                } else {
+                    System.out.println("Problema ao recuperar do banco de dados.");
+                }
+            } else {
+                System.out.println("Usuairo optou por não inserir no banco de dados.");
+            }
+        } else {
+            System.out.println("logradouro não é nulo.");
+        }
+        // Fim tratamento de logradouro
+
+        /*Se bairro for nulo será inserido no banco*/
+        if (bairro == null) {
+            if (mostraMensagemObjetoNulo(TipoObjetoProps.BAIRRO, campoTextoBairro.getText())) {
+                ControleGenerico.insert(TipoObjetoProps.BAIRRO, campoTextoBairro.getText(), null);
+                ObjectsBD obj = ControleGenerico.select(TipoObjetoProps.BAIRRO, campoTextoBairro.getText());
+                bairro = (Bairro) obj;
+                if (bairro == null) {
+                    return false;
+                } else {
+                    System.out.println("Problema ao recuperar do banco de dados.");
+                }
+            } else {
+                System.out.println("Usuairo optou por não inserir no banco de dados.");
+            }
+        } else {
+            System.out.println("bairro não é nulo");
+        }
+
+        /*Se cidade for nulo será inserido no banco*/
+        if (cidade == null) {
+            if (mostraMensagemObjetoNulo(TipoObjetoProps.CIDADE, campoTextoCidade.getText())) {
+                ControleGenerico.insert(TipoObjetoProps.CIDADE, campoTextoCidade.getText(), null);
+                ObjectsBD obj = ControleGenerico.select(TipoObjetoProps.CIDADE, campoTextoCidade.getText());
+                cidade = (Cidade) obj;
+                if (cidade == null) {
+                    return false;
+                } else {
+                    System.out.println("Problema ao recuperar do banco de dados.");
+                }
+            } else {
+                System.out.println("Usuairo optou por não inserir no banco de dados.");
+            }
+        } else {
+            System.out.println("cidade não é nulo");
+        }
+
+        /*Se estado for nulo será inserido no banco*/
+        if (estado == null) {
+            if (mostraMensagemObjetoNulo(TipoObjetoProps.ESTADO, campoTextoEstado.getText())) {
+                ControleGenerico.insert(TipoObjetoProps.ESTADO, campoTextoEstado.getText(), null);
+                ObjectsBD obj = ControleGenerico.select(TipoObjetoProps.ESTADO, campoTextoEstado.getText());
+                estado = (Estado) obj;
+                if (estado == null) {
+                    return false;
+                } else {
+                    System.out.println("Problema ao recuperar do banco de dados.");
+                }
+            } else {
+                System.out.println("Usuairo optou por não inserir no banco de dados.");
+            }
+        } else {
+            System.out.println("estado não é nulo");
+        }
+
+        /*Se pais for nulo será inserido no banco*/
+        if (pais == null) {
+            if (mostraMensagemObjetoNulo(TipoObjetoProps.PAIS, campoTextoPais.getText())) {
+                ControleGenerico.insert(TipoObjetoProps.PAIS, campoTextoPais.getText(), null);
+                ObjectsBD obj = ControleGenerico.select(TipoObjetoProps.PAIS, campoTextoPais.getText());
+                pais = (Pais) obj;
+                if (pais == null) {
+                    return false;
+                } else {
+                    System.out.println("Problema ao recuperar do banco de dados.");
+                }
+            } else {
+                System.out.println("Usuairo optou por não inserir no banco de dados.");
+            }
+        } else {
+            System.out.println("pais não é nulo");
+        }
+
+        /*Se pessoa for nulo será criado uma nova pessoa para posteiormente inserir no banco*/
+        if (pessoa == null && opcao == CADASTRO) {
+            pessoa = new Pessoas();
+            pessoa.setNome(campoTextoNome.getText());
+        } else {
+            if (opcao == ALTERACAO) {
+                return true;
+            } else {
+                System.out.println("pessoa não é nulo");
+                JOptionPane.showMessageDialog(this, "Você não pode inserir novamente esta pessoa.\nClique em alterar caso "
+                        + "deseje alterar as informações.", "Atenção", JOptionPane.INFORMATION_MESSAGE);
+                return false;
+            }
         }
         return true;
     }
 
-    private void validarObjetosNulos() {
+    private void limparTudo() {
+        
+        this.ProgressBarConexao.setValue(0);
+        
+        this.pessoa = null;
+        this.logradouro = null;
+        this.bairro = null;
+        this.cidade = null;
+        this.estado = null;
+        this.pais = null;
 
-        if (logradouro == null && !campoTextoLogradouro.getText().isEmpty()) {
-            ControleGenerico.insert(TipoObjetoProps.LOGRADOURO, campoTextoLogradouro.getText());
-            ObjectsBD obj = ControleGenerico.select(TipoObjetoProps.LOGRADOURO, campoTextoLogradouro.getText());
-            logradouro = (Logradouro) obj;
-        } else {
-            System.out.println("logradouro não é nulo");
-        }
-        if (bairro == null && !campoTextoBairro.getText().isEmpty()) {
-            ControleGenerico.insert(TipoObjetoProps.BAIRRO, campoTextoBairro.getText());
-            ObjectsBD obj = ControleGenerico.select(TipoObjetoProps.BAIRRO, campoTextoBairro.getText());
-            bairro = (Bairro) obj;
-        } else {
-            System.out.println("bairro não é nulo");
-        }
-        if (cidade == null && !campoTextoCidade.getText().isEmpty()) {
-            ControleGenerico.insert(TipoObjetoProps.CIDADE, campoTextoCidade.getText());
-            ObjectsBD obj = ControleGenerico.select(TipoObjetoProps.CIDADE, campoTextoCidade.getText());
-            cidade = (Cidade) obj;
-        } else {
-            System.out.println("cidade não é nulo");
-        }
-        if (estado == null && !campoTextoEstado.getText().isEmpty()){
-            ControleGenerico.insert(TipoObjetoProps.ESTADO, campoTextoEstado.getText());
-            ObjectsBD obj = ControleGenerico.select(TipoObjetoProps.ESTADO, campoTextoEstado.getText());
-            estado = (Estado) obj;
-        } else {
-            System.out.println("estado não é nulo");
-        }
-        if (pais == null && !campoTextoPais.getText().isEmpty()){
-            ControleGenerico.insert(TipoObjetoProps.PAIS, campoTextoPais.getText());
-            ObjectsBD obj = ControleGenerico.select(TipoObjetoProps.PAIS, campoTextoPais.getText());
-            pais = (Pais) obj;
-        } else {
-            System.out.println("pais não é nulo");
-        }
-        if (pessoa == null && !campoTextoNome.getText().isEmpty()){
-            pessoa = new Pessoas();
-            pessoa.setNome(campoTextoEstado.getText());
-        } else {
-            System.out.println("pessoa não é nulo");
-        }
+        this.campoTextoCodigo.setText("");
+        this.campoTextoNome.setText("");
+        this.campoTextoLogradouro.setText("");
+        this.campoTextoBairro.setText("");
+        this.campoTextoCidade.setText("");
+        this.campoTextoCidade.setText("");
+        this.campoTextoEstado.setText("");
+        this.campoTextoPais.setText("");
+    }
+
+    private boolean mostraMensagemObjetoNulo(String tabela, String valor) {
+
+        return JOptionPane.showConfirmDialog(this, "Deseja inserir na tabela " + tabela + " as informações "
+                + valor + " manualmente ?", "Atenção", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
     }
 
     /**
@@ -228,10 +325,13 @@ public class ViewMain extends JFrame {
         botaoInclusao = new javax.swing.JButton();
         botaoAlteracao = new javax.swing.JButton();
         botaoConsultar = new javax.swing.JButton();
+        botaoLimparCampos = new javax.swing.JButton();
+        botaoExcluir = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         conexao1 = new javax.swing.JLabel();
         conexao2 = new javax.swing.JLabel();
         conexao3 = new javax.swing.JLabel();
+        ProgressBarConexao = new javax.swing.JProgressBar();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setCursor(new java.awt.Cursor(java.awt.Cursor.SE_RESIZE_CURSOR));
@@ -306,14 +406,7 @@ public class ViewMain extends JFrame {
 
         campoTextoCodigo.setEditable(false);
 
-        campoTextoNome.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-
         campoTextoLogradouro.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        campoTextoLogradouro.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                campoTextoLogradouroActionPerformed(evt);
-            }
-        });
 
         campoTextoBairro.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
@@ -375,42 +468,69 @@ public class ViewMain extends JFrame {
         });
 
         botaoAlteracao.setText("Alteração");
+        botaoAlteracao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoAlteracaoActionPerformed(evt);
+            }
+        });
 
         botaoConsultar.setText("Consultar");
+
+        botaoLimparCampos.setText("Limpar");
+        botaoLimparCampos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoLimparCamposActionPerformed(evt);
+            }
+        });
+
+        botaoExcluir.setText("Excluir");
+        botaoExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoExcluirActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(botaoInclusao, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(botaoAlteracao, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(botaoConsultar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addGap(46, 46, 46)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(botaoExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(botaoLimparCampos, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(botaoConsultar, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(botaoAlteracao, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(botaoInclusao, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(42, 42, 42))
         );
+
+        jPanel3Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {botaoAlteracao, botaoConsultar, botaoExcluir, botaoInclusao, botaoLimparCampos});
+
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(37, 37, 37)
-                .addComponent(botaoInclusao)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(botaoAlteracao)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(botaoConsultar)
+                .addGap(15, 15, 15)
+                .addComponent(botaoInclusao, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(botaoAlteracao, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(botaoConsultar, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(botaoLimparCampos, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(botaoExcluir)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jPanel3Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {botaoAlteracao, botaoConsultar, botaoExcluir, botaoInclusao, botaoLimparCampos});
+
         jPanel4.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        conexao1.setText("Maquina : ");
         conexao1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED));
 
-        conexao2.setText("Maquina : ");
         conexao2.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED));
 
-        conexao3.setText("Maquina : ");
         conexao3.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED));
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -420,27 +540,25 @@ public class ViewMain extends JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(conexao1, javax.swing.GroupLayout.PREFERRED_SIZE, 497, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(conexao2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 497, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(conexao3, javax.swing.GroupLayout.PREFERRED_SIZE, 497, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(conexao2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(conexao1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(conexao3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(ProgressBarConexao, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
-
-        jPanel4Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {conexao1, conexao2, conexao3});
-
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(conexao1)
+                .addComponent(conexao1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(conexao2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(conexao3)
+                .addComponent(conexao2, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(conexao3, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ProgressBarConexao, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
                 .addContainerGap())
         );
-
-        jPanel4Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {conexao1, conexao2, conexao3});
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -450,54 +568,56 @@ public class ViewMain extends JFrame {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel7)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(campoTextoEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(botaoEstado))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(campoTextoLogradouro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(botaoLogradouro))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel5)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(campoTextoBairro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(botaoBairro))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel6)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(campoTextoCidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(botaoCidade))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(jLabel3)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(campoTextoNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(jLabel2)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(campoTextoCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(botaoNome)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())
-                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel8)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(campoTextoPais, javax.swing.GroupLayout.DEFAULT_SIZE, 273, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(botaoPais)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(jLabel7)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(campoTextoEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(botaoEstado))
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(jLabel4)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(campoTextoLogradouro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(botaoLogradouro))
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(jLabel5)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(campoTextoBairro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(botaoBairro))
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(jLabel6)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(campoTextoCidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(botaoCidade))
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                                .addComponent(jLabel3)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(campoTextoNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                                .addComponent(jLabel2)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(campoTextoCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(botaoNome)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addContainerGap())))
         );
 
         jPanel2Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jLabel2, jLabel3, jLabel4, jLabel5, jLabel6, jLabel7, jLabel8});
@@ -544,7 +664,7 @@ public class ViewMain extends JFrame {
                             .addComponent(campoTextoPais, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(botaoPais)))
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
+                .addGap(25, 25, 25)
                 .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
@@ -577,13 +697,8 @@ public class ViewMain extends JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void campoTextoLogradouroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoTextoLogradouroActionPerformed
-
-    }//GEN-LAST:event_campoTextoLogradouroActionPerformed
-
     private void botaoLogradouroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoLogradouroActionPerformed
         abreCadastroAuxiliar(TipoObjetoProps.LOGRADOURO);
-
     }//GEN-LAST:event_botaoLogradouroActionPerformed
 
     private void botaoBairroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoBairroActionPerformed
@@ -592,8 +707,18 @@ public class ViewMain extends JFrame {
 
     private void botaoInclusaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoInclusaoActionPerformed
         if (validarCampos()) {
-            validarObjetosNulos();
+            if (validarObjetosNulos(CADASTRO)) {
+
+                pessoa.setLogradouro(logradouro);
+                pessoa.setBairro(bairro);
+                pessoa.setCidade(cidade);
+                pessoa.setEstado(estado);
+                pessoa.setPais(pais);
+
+                ControleGenerico.insert(TipoObjetoProps.PESSOAS, pessoa.getNome(), pessoa);
+            }
         } else {
+            JOptionPane.showMessageDialog(this, "Verifique os campos.", "Atenção", JOptionPane.ERROR_MESSAGE);
             System.out.println("Campo não preenchido");
         }
     }//GEN-LAST:event_botaoInclusaoActionPerformed
@@ -614,13 +739,52 @@ public class ViewMain extends JFrame {
         abreCadastroAuxiliar(TipoObjetoProps.PESSOAS);
     }//GEN-LAST:event_botaoNomeActionPerformed
 
+    private void botaoLimparCamposActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoLimparCamposActionPerformed
+        limparTudo();
+    }//GEN-LAST:event_botaoLimparCamposActionPerformed
+
+    private void botaoAlteracaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAlteracaoActionPerformed
+        if (validarCampos()) {
+            if (validarObjetosNulos(ALTERACAO)) {
+
+                pessoa.setLogradouro(logradouro);
+                pessoa.setBairro(bairro);
+                pessoa.setCidade(cidade);
+                pessoa.setEstado(estado);
+                pessoa.setPais(pais);
+
+                ControleGenerico.update(pessoa);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Verifique os campos.", "Atenção", JOptionPane.ERROR_MESSAGE);
+            System.out.println("Campo não preenchido");
+        }
+
+        if (pessoa == null) {
+            JOptionPane.showMessageDialog(this, "É preciso selecionar uma pessoa para alterar.", "Atenção", JOptionPane.ERROR_MESSAGE);
+        } else {
+            ControleGenerico.update(pessoa);
+        }
+    }//GEN-LAST:event_botaoAlteracaoActionPerformed
+
+    private void botaoExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoExcluirActionPerformed
+        if (pessoa == null) {
+            JOptionPane.showMessageDialog(this, "É preciso selecionar uma pessoa para excluir.", "Atenção", JOptionPane.ERROR_MESSAGE);
+        } else {
+            ControleGenerico.delete(pessoa);
+        }
+    }//GEN-LAST:event_botaoExcluirActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    public static javax.swing.JProgressBar ProgressBarConexao;
     private javax.swing.JButton botaoAlteracao;
     private javax.swing.JButton botaoBairro;
     private javax.swing.JButton botaoCidade;
     private javax.swing.JButton botaoConsultar;
     private javax.swing.JButton botaoEstado;
+    private javax.swing.JButton botaoExcluir;
     private javax.swing.JButton botaoInclusao;
+    private javax.swing.JButton botaoLimparCampos;
     private javax.swing.JButton botaoLogradouro;
     private javax.swing.JButton botaoNome;
     private javax.swing.JButton botaoPais;
@@ -631,9 +795,9 @@ public class ViewMain extends JFrame {
     private javax.swing.JTextField campoTextoLogradouro;
     private javax.swing.JTextField campoTextoNome;
     private javax.swing.JTextField campoTextoPais;
-    private javax.swing.JLabel conexao1;
-    private javax.swing.JLabel conexao2;
-    private javax.swing.JLabel conexao3;
+    public static javax.swing.JLabel conexao1;
+    public static javax.swing.JLabel conexao2;
+    public static javax.swing.JLabel conexao3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -645,6 +809,6 @@ public class ViewMain extends JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
+    public static javax.swing.JPanel jPanel4;
     // End of variables declaration//GEN-END:variables
 }
