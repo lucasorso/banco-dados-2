@@ -108,7 +108,7 @@ public class ViewCadastroAuxiliar extends JFrame {
             }
             break;
             case "pessoas": {
-                sql = "SELECT p.*, l.nome AS logradouro, b.nome AS bairro, c.nome AS cidade, e.nome AS estado, pa.nome AS pais \n"
+                sql = "SELECT p.*, l.nomeLogradouro AS logradouro, b.nomeBairro AS bairro, c.nomeCidade AS cidade, e.nomeEstado AS estado, pa.nomePais AS pais \n"
                         + "FROM pessoas AS p \n"
                         + "INNER JOIN logradouro AS l ON p.logradouroIdLogradouro = l.idLogradouro \n"
                         + "INNER JOIN bairro AS b ON p.bairroIdBairro = b.idBairro \n"

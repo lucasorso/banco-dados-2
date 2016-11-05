@@ -211,37 +211,37 @@ public class ControleGenerico {
             try {
                 switch (tipoObjeto) {
                     case "logradouro": {
-                        String sql = "insert into " + tipoObjeto + "(nome) values(?)";
+                        String sql = "insert into " + tipoObjeto + "(nomeLogradouro) values(?)";
                         ps = conn.prepareStatement(sql);
                         ps.setString(1, nome);
                     }
                     break;
                     case "bairro": {
-                        String sql = "insert into " + tipoObjeto + "(nome) values(?)";
+                        String sql = "insert into " + tipoObjeto + "(nomeBairro) values(?)";
                         ps = conn.prepareStatement(sql);
                         ps.setString(1, nome);
                     }
                     break;
                     case "cidade": {
-                        String sql = "insert into " + tipoObjeto + "(nome) values(?)";
+                        String sql = "insert into " + tipoObjeto + "(nomeCidade) values(?)";
                         ps = conn.prepareStatement(sql);
                         ps.setString(1, nome);
                     }
                     break;
                     case "estado": {
-                        String sql = "insert into " + tipoObjeto + "(nome) values(?)";
+                        String sql = "insert into " + tipoObjeto + "(nomeEstado) values(?)";
                         ps = conn.prepareStatement(sql);
                         ps.setString(1, nome);
                     }
                     break;
                     case "pais": {
-                        String sql = "insert into " + tipoObjeto + "(nome) values(?)";
+                        String sql = "insert into " + tipoObjeto + "(nomePais) values(?)";
                         ps = conn.prepareStatement(sql);
                         ps.setString(1, nome);
                     }
                     break;
                     case "pessoas": {
-                        String sql = "insert into pessoas (nome, logradouroIdLogradouro, bairroIdBairro, cidadeIdCidade, estadoIdEstado, paisIdPais) values(?,?,?,?,?,?)";
+                        String sql = "insert into pessoas (nomePessoa, logradouroIdLogradouro, bairroIdBairro, cidadeIdCidade, estadoIdEstado, paisIdPais) values(?,?,?,?,?,?)";
                         ps = conn.prepareStatement(sql);
                         ps.setString(1, pessoa.getNome());
                         ps.setInt(2, pessoa.getLogradouro().getId());
@@ -465,6 +465,8 @@ public class ControleGenerico {
     }
 
     public static void update(Pessoas pessoa) {
+        
+        Pessoas pessoa2 = new Pessoas();
 
         Random generator = new Random();
         int conexaoAleatorio = generator.nextInt(2) + 1;
@@ -497,17 +499,15 @@ public class ControleGenerico {
 
             PreparedStatement ps = null;
             try {
-                String sql = "update pessoas set nome = ?,cpf = ?,rg = ?,sexo = ?,rua = ?,cidade = ?,cep = ?,estado = ? where id_pessoas = ?";
+                String sql = "update pessoas set nomePessoa = ?, logradouroIdLogradouro = ?, bairroIdBairro = ?, cidadeIdCidade = ?, estadoIdEstado = ?, paisIdPais = ? where idPessoa = ?; ";
                 ps = conn.prepareStatement(sql);
                 ps.setString(1, pessoa.getNome());
-                // ps.setString(2, pessoa.getCpf());
-                // ps.setString(3, pessoa.getRg());
-                //// ps.setString(4, pessoa.getSexo());
-                // ps.setString(5, pessoa.getRua());
-                // ps.setString(6, pessoa.getCidade());
-                // ps.setString(7, pessoa.getCep());
-                //ps.setString(8, pessoa.getEstado());
-                ps.setInt(9, pessoa.getId());
+                ps.setInt(2, pessoa.getLogradouro().getId());
+                ps.setInt(3, pessoa.getBairro().getId());
+                ps.setInt(4, pessoa.getCidade().getId());
+                ps.setInt(5, pessoa.getEstado().getId());
+                ps.setInt(6, pessoa.getPais().getId());
+                ps.setInt(7, pessoa.getId());
                 ps.execute();
                 conn.commit();
             } catch (SQLException e) {
