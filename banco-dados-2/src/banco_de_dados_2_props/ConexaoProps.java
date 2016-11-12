@@ -16,7 +16,7 @@ import java.util.List;
 public enum ConexaoProps {
     
     CONEXAO_BANCO_1(1,"jdbc:mysql://localhost:3306/ly?rewriteBatchedStatements=true&relaxAutoCommit=true", "root", "123"),
-    CONEXAO_BANCO_2(2,"jdbc:mysql://172.16.82.5:3306/ly?rewriteBatchedStatements=true&relaxAutoCommit=true", "cont12", "comp2"),
+    CONEXAO_BANCO_2(2,"jdbc:mysql://172.16.82.5:3306/ly?rewriteBatchedStatements=true&relaxAutoCommit=true", "cont12", "123"),
     CONEXAO_BANCO_3(3,"jdbc:mysql://172.16.82.4:3306/ly?rewriteBatchedStatements=true&relaxAutoCommit=true", "cont12", "comp2");
     
     public final int idConexao;

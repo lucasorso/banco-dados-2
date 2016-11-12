@@ -251,6 +251,9 @@ public class ViewMain extends JFrame {
         this.campoTextoCidade.setText("");
         this.campoTextoEstado.setText("");
         this.campoTextoPais.setText("");
+        conexao1.setText("");
+        conexao2.setText("");
+        conexao3.setText("");
     }
 
     private boolean mostraMensagemObjetoNulo(String tabela, String valor) {
@@ -334,7 +337,7 @@ public class ViewMain extends JFrame {
         ProgressBarConexao = new javax.swing.JProgressBar();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setCursor(new java.awt.Cursor(java.awt.Cursor.SE_RESIZE_CURSOR));
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setForeground(java.awt.Color.white);
         setLocation(new java.awt.Point(0, 0));
 
@@ -360,7 +363,7 @@ public class ViewMain extends JFrame {
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
-        jPanel2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanel2.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -406,15 +409,15 @@ public class ViewMain extends JFrame {
 
         campoTextoCodigo.setEditable(false);
 
-        campoTextoLogradouro.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        campoTextoLogradouro.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
-        campoTextoBairro.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        campoTextoBairro.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
-        campoTextoCidade.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        campoTextoCidade.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
-        campoTextoEstado.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        campoTextoEstado.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
-        campoTextoPais.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        campoTextoPais.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         botaoNome.setText("...");
         botaoNome.addActionListener(new java.awt.event.ActionListener() {
@@ -475,6 +478,11 @@ public class ViewMain extends JFrame {
         });
 
         botaoConsultar.setText("Consultar");
+        botaoConsultar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoConsultarActionPerformed(evt);
+            }
+        });
 
         botaoLimparCampos.setText("Limpar");
         botaoLimparCampos.addActionListener(new java.awt.event.ActionListener() {
@@ -772,8 +780,16 @@ public class ViewMain extends JFrame {
             JOptionPane.showMessageDialog(this, "É preciso selecionar uma pessoa para excluir.", "Atenção", JOptionPane.ERROR_MESSAGE);
         } else {
             ControleGenerico.delete(pessoa);
+            limparTudo();
+            JOptionPane.showMessageDialog(this, "Excluido com sucesso.", "Atenção", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_botaoExcluirActionPerformed
+
+    private void botaoConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoConsultarActionPerformed
+        ViewCadastroAuxiliar cad1 = new ViewCadastroAuxiliar(TipoObjetoProps.PESSOAS, this);
+        ViewCadastroAuxiliar cad2 = new ViewCadastroAuxiliar(TipoObjetoProps.PESSOAS, this);
+        ViewCadastroAuxiliar cad3 = new ViewCadastroAuxiliar(TipoObjetoProps.PESSOAS, this);
+    }//GEN-LAST:event_botaoConsultarActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public static javax.swing.JProgressBar ProgressBarConexao;

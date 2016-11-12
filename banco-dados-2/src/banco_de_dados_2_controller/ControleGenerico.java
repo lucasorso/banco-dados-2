@@ -21,6 +21,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
@@ -40,7 +42,7 @@ public class ControleGenerico {
         ResultSet rs = null;
 
         Conexao connection = new Conexao(ConexaoProps.getConexaoProps(conexaoAleatorio));
-        
+
         ViewMain.conexao1.setText(ConexaoProps.getConexaoProps(conexaoAleatorio).getCaminhoBanco() + " " + ConexaoProps.getConexaoProps(conexaoAleatorio).getUsuario());
 
         List<ObjectsBD> mObjectList = new ArrayList<>();
@@ -196,18 +198,31 @@ public class ControleGenerico {
                     ViewMain.ProgressBarConexao.setValue(this.progress);
                 }
             });
-            
-            if (c.ordinal() == 0 ){
-                ViewMain.conexao1.setText(c.getCaminhoBanco() + " " +c.getUsuario());
+            PreparedStatement ps = null;
+            PreparedStatement p1 = null;
+
+            String banco1 = "banco1", banco2 = "banco2", banco3 = "banco3";
+
+            if (c.ordinal() == 0) {
+                ViewMain.conexao1.setText(c.getCaminhoBanco() + " " + c.getUsuario());
+                banco1 = c.getCaminhoBanco();
             }
-            if (c.ordinal() == 1 ){
-                ViewMain.conexao2.setText(c.getCaminhoBanco() + " " +c.getUsuario());
+            if (c.ordinal() == 1) {
+                ViewMain.conexao2.setText(c.getCaminhoBanco() + " " + c.getUsuario());
+                banco2 = c.getCaminhoBanco();
             }
-            if (c.ordinal() == 2 ){
-                ViewMain.conexao3.setText(c.getCaminhoBanco() + " " +c.getUsuario());
+            if (c.ordinal() == 2) {
+                ViewMain.conexao3.setText(c.getCaminhoBanco() + " " + c.getUsuario());
+                banco3 = c.getCaminhoBanco();
+
+            }
+            try {
+                p1 = conn.prepareStatement("insert into movimento (nomeDoBanco) values (?)");
+                p1.setString(1, banco1 + " " + banco2 + " " + banco3);
+            } catch (SQLException ex) {
+                Logger.getLogger(ControleGenerico.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-            PreparedStatement ps = null;
             try {
                 switch (tipoObjeto) {
                     case "logradouro": {
@@ -252,6 +267,9 @@ public class ControleGenerico {
                     }
                     break;
                 }
+                if (p1 != null) {
+                    p1.execute();
+                }
                 ps.execute();
                 conn.commit();
             } catch (SQLException e) {
@@ -268,6 +286,9 @@ public class ControleGenerico {
             } finally {
                 if (ps != null) {
                     try {
+                        if (p1 != null) {
+                            p1.close();
+                        }
                         ps.close();
                     } catch (SQLException ex) {
                         System.out.println("ERRO: " + ex.getMessage());
@@ -294,15 +315,13 @@ public class ControleGenerico {
         ResultSet rs = null;
 
         Conexao connection = new Conexao(ConexaoProps.getConexaoProps(conexaoAleatorio));
-        
-        
 
         ObjectsBD obj = new ObjectsBD();
         try {
             conn = Conexao.getConnection();
             switch (tipoObjeto) {
                 case "logradouro": {
-                    ps = conn.prepareStatement("select * from logradouro where nome = ?;");
+                    ps = conn.prepareStatement("select * from logradouro where nomeLogradouro = ?;");
                     ps.setString(1, nome);
                     rs = ps.executeQuery();
 
@@ -319,7 +338,7 @@ public class ControleGenerico {
                 }
                 break;
                 case "bairro": {
-                    ps = conn.prepareStatement("select * from bairro where nome = ?;");
+                    ps = conn.prepareStatement("select * from bairro where nomeBairro = ?;");
                     ps.setString(1, nome);
                     rs = ps.executeQuery();
 
@@ -338,7 +357,7 @@ public class ControleGenerico {
                 }
                 break;
                 case "cidade": {
-                    ps = conn.prepareStatement("select * from cidade where nome = ?;");
+                    ps = conn.prepareStatement("select * from cidade where nomeCidade = ?;");
                     ps.setString(1, nome);
                     rs = ps.executeQuery();
 
@@ -356,7 +375,7 @@ public class ControleGenerico {
                 }
                 break;
                 case "estado": {
-                    ps = conn.prepareStatement("select * from estado where nome = ?;");
+                    ps = conn.prepareStatement("select * from estado where nomeEstado = ?;");
                     ps.setString(1, nome);
                     rs = ps.executeQuery();
 
@@ -375,7 +394,7 @@ public class ControleGenerico {
                 }
                 break;
                 case "pais": {
-                    ps = conn.prepareStatement("select * from pais where nome = ?;");
+                    ps = conn.prepareStatement("select * from pais where nomePais = ?;");
                     ps.setString(1, nome);
                     rs = ps.executeQuery();
 
@@ -426,46 +445,52 @@ public class ControleGenerico {
     }
 
     public static void delete(Pessoas pessoa) {
-        Connection conn = null;
-        PreparedStatement ps = null;
-        try {
-            conn = Conexao.getConnection();
-            String sql = "delete from pessoas where id_pessoas = ?";
-            ps = conn.prepareStatement(sql);
-            ps.setInt(1, pessoa.getId());
-            ps.execute();
-            conn.commit();
-        } catch (SQLException e) {
-            System.out.println("ERRO: " + e.getMessage());
 
-            if (conn != null) {
-                try {
-                    conn.rollback();
-                } catch (SQLException ex) {
-                    System.out.println("ERRO: " + ex.getMessage());
-                }
-            }
+        for (ConexaoProps c : ConexaoProps.values()) {
 
-        } finally {
-            if (ps != null) {
-                try {
-                    ps.close();
-                } catch (SQLException ex) {
-                    System.out.println("ERRO: " + ex.getMessage());
+            Connection conn = null;
+            PreparedStatement ps = null;
+            try {
+                Conexao connection = new Conexao(c);
+                conn = Conexao.getConnection();
+                String sql = "delete from pessoas where idPessoa = ?";
+                ps = conn.prepareStatement(sql);
+                ps.setInt(1, pessoa.getId());
+                ps.execute();
+                conn.commit();
+            } catch (SQLException e) {
+                System.out.println("ERRO: " + e.getMessage());
+
+                if (conn != null) {
+                    try {
+                        conn.rollback();
+                    } catch (SQLException ex) {
+                        System.out.println("ERRO: " + ex.getMessage());
+                    }
                 }
-            }
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException ex) {
-                    System.out.println("ERRO: " + ex.getMessage());
+
+            } finally {
+                if (ps != null) {
+                    try {
+                        ps.close();
+                    } catch (SQLException ex) {
+                        System.out.println("ERRO: " + ex.getMessage());
+                    }
+                }
+                if (conn != null) {
+                    try {
+                        conn.close();
+                    } catch (SQLException ex) {
+                        System.out.println("ERRO: " + ex.getMessage());
+                    }
                 }
             }
         }
+
     }
 
     public static void update(Pessoas pessoa) {
-        
+
         Pessoas pessoa2 = new Pessoas();
 
         Random generator = new Random();

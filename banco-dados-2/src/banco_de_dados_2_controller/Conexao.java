@@ -31,4 +31,9 @@ public class Conexao {
         }
         return conn;
     }
+
+    @Override
+    public String toString() {
+       return caminhoBanco;
+    }
 }
