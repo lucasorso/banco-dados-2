@@ -31,9 +31,18 @@ public class Conexao {
         }
         return conn;
     }
-
+    
+    public String getCaminhoBanco(){
+        return caminhoBanco.substring(0, 33);
+    }
+       
     @Override
     public String toString() {
-       return caminhoBanco;
+       StringBuilder builder = new StringBuilder();
+       builder.append(id).append(" => ");
+       builder.append(caminhoBanco.substring(0, 33)).append(" => ");
+       builder.append(usuario).append(" => ");
+       builder.append(senha);
+       return builder.toString();
     }
 }

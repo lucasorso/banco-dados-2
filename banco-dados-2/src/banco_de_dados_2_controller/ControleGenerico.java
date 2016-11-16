@@ -18,11 +18,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
@@ -35,7 +36,7 @@ public class ControleGenerico {
     public static List<ObjectsBD> getAll(String sql, String tipoObjeto) {
 
         Random generator = new Random();
-        int conexaoAleatorio = generator.nextInt(2) + 1;
+        int conexaoAleatorio = generator.nextInt(3) + 1;
 
         Connection conn = null;
         PreparedStatement ps = null;
@@ -43,7 +44,10 @@ public class ControleGenerico {
 
         Conexao connection = new Conexao(ConexaoProps.getConexaoProps(conexaoAleatorio));
 
-        ViewMain.conexao1.setText(ConexaoProps.getConexaoProps(conexaoAleatorio).getCaminhoBanco() + " " + ConexaoProps.getConexaoProps(conexaoAleatorio).getUsuario());
+        ViewMain.conexao4.setText(connection.toString());
+        ViewMain.conexao1.setText("");
+        ViewMain.conexao2.setText("");
+        ViewMain.conexao3.setText("");
 
         List<ObjectsBD> mObjectList = new ArrayList<>();
         try {
@@ -167,15 +171,21 @@ public class ControleGenerico {
                 }
             }
         }
+        movimento("Select All", new String[]{ConexaoProps.getConexaoProps(conexaoAleatorio).toString()}, new Timestamp(Calendar.getInstance().getTimeInMillis()));
         return mObjectList;
     }
 
     public static void insert(String tipoObjeto, String nome, Pessoas pessoa) {
+        String banco1 = "banco1", banco2 = "banco2", banco3 = "banco3";
+
         Random generator = new Random();
-        int conexaoAleatorio = generator.nextInt(2) + 1;
+        int conexaoAleatorio = generator.nextInt(3) + 1;
+
         Connection conn = null;
+
         ViewMain.ProgressBarConexao.setValue(0);
         ViewMain.ProgressBarConexao.setMaximum(3);
+
         int progress = 0;
         /*For com a quantidade de valores*/
         for (ConexaoProps c : ConexaoProps.values()) {
@@ -199,28 +209,16 @@ public class ControleGenerico {
                 }
             });
             PreparedStatement ps = null;
-            PreparedStatement p1 = null;
-
-            String banco1 = "banco1", banco2 = "banco2", banco3 = "banco3";
 
             if (c.ordinal() == 0) {
-                ViewMain.conexao1.setText(c.getCaminhoBanco() + " " + c.getUsuario());
-                banco1 = c.getCaminhoBanco();
-            }
-            if (c.ordinal() == 1) {
-                ViewMain.conexao2.setText(c.getCaminhoBanco() + " " + c.getUsuario());
-                banco2 = c.getCaminhoBanco();
-            }
-            if (c.ordinal() == 2) {
-                ViewMain.conexao3.setText(c.getCaminhoBanco() + " " + c.getUsuario());
-                banco3 = c.getCaminhoBanco();
-
-            }
-            try {
-                p1 = conn.prepareStatement("insert into movimento (nomeDoBanco) values (?)");
-                p1.setString(1, banco1 + " " + banco2 + " " + banco3);
-            } catch (SQLException ex) {
-                Logger.getLogger(ControleGenerico.class.getName()).log(Level.SEVERE, null, ex);
+                ViewMain.conexao1.setText(connection.toString());
+                banco1 = connection.toString();
+            } else if (c.ordinal() == 1) {
+                ViewMain.conexao2.setText(connection.toString());
+                banco2 = connection.toString();
+            } else if (c.ordinal() == 2) {
+                ViewMain.conexao3.setText(connection.toString());
+                banco3 = connection.toString();
             }
 
             try {
@@ -267,9 +265,6 @@ public class ControleGenerico {
                     }
                     break;
                 }
-                if (p1 != null) {
-                    p1.execute();
-                }
                 ps.execute();
                 conn.commit();
             } catch (SQLException e) {
@@ -286,9 +281,6 @@ public class ControleGenerico {
             } finally {
                 if (ps != null) {
                     try {
-                        if (p1 != null) {
-                            p1.close();
-                        }
                         ps.close();
                     } catch (SQLException ex) {
                         System.out.println("ERRO: " + ex.getMessage());
@@ -303,12 +295,13 @@ public class ControleGenerico {
                 }
             }
         }
+        movimento("Inserção", new String[]{banco1, banco2, banco3}, new Timestamp(Calendar.getInstance().getTimeInMillis()));
     }
 
     public static ObjectsBD select(String tipoObjeto, String nome) {
 
         Random generator = new Random();
-        int conexaoAleatorio = generator.nextInt(2) + 1;
+        int conexaoAleatorio = generator.nextInt(3) + 1;
 
         Connection conn = null;
         PreparedStatement ps = null;
@@ -441,13 +434,13 @@ public class ControleGenerico {
                 }
             }
         }
+        movimento("select", new String[]{ConexaoProps.getConexaoProps(conexaoAleatorio).toString()}, new Timestamp(Calendar.getInstance().getTimeInMillis()));
         return obj;
     }
 
     public static void delete(Pessoas pessoa) {
-
+        String banco1 = "banco1", banco2 = "banco2", banco3 = "banco3";
         for (ConexaoProps c : ConexaoProps.values()) {
-
             Connection conn = null;
             PreparedStatement ps = null;
             try {
@@ -486,15 +479,17 @@ public class ControleGenerico {
                 }
             }
         }
-
+        movimento("Delete", new String[]{banco1, banco2, banco3}, new Timestamp(Calendar.getInstance().getTimeInMillis()));
     }
 
-    public static void update(Pessoas pessoa) {
-
+    public static void update(Pessoas pessoa){
+        
+        String banco1 = "banco1", banco2 = "banco2", banco3 = "banco3";
         Pessoas pessoa2 = new Pessoas();
+        pessoa2 = pessoa;
 
         Random generator = new Random();
-        int conexaoAleatorio = generator.nextInt(2) + 1;
+        int conexaoAleatorio = generator.nextInt(3) + 1;
         Connection conn = null;
 
         ViewMain.ProgressBarConexao.setValue(0);
@@ -506,7 +501,7 @@ public class ControleGenerico {
             caso contrário fara as outras conexões*/
             if (c.idConexao == conexaoAleatorio) {
                 Conexao connection = new Conexao(ConexaoProps.getConexaoProps(conexaoAleatorio));
-                conn = Conexao.getConnection();
+                conn = connection.getConnection();
 
             }
             Conexao connection = new Conexao(ConexaoProps.getConexaoProps(c.idConexao));
@@ -521,6 +516,17 @@ public class ControleGenerico {
                     ViewMain.ProgressBarConexao.setValue(this.progress);
                 }
             });
+            
+            if (c.ordinal() == 0) {
+                ViewMain.conexao1.setText(connection.toString());
+                banco1 = connection.toString();
+            } else if (c.ordinal() == 1) {
+                ViewMain.conexao2.setText(connection.toString());
+                banco2 = connection.toString();
+            } else if (c.ordinal() == 2) {
+                ViewMain.conexao3.setText(connection.toString());
+                banco3 = connection.toString();
+            }
 
             PreparedStatement ps = null;
             try {
@@ -546,6 +552,53 @@ public class ControleGenerico {
                     }
                 }
 
+            } finally {
+                if (ps != null) {
+                    try {
+                        ps.close();
+                    } catch (SQLException ex) {
+                        System.out.println("ERRO: " + ex.getMessage());
+                    }
+                }
+                if (conn != null) {
+                    try {
+                        conn.close();
+                    } catch (SQLException ex) {
+                        System.out.println("ERRO: " + ex.getMessage());
+                    }
+                }
+            }
+        }
+        movimento("Alterção", new String[]{banco1, banco2, banco3}, new Timestamp(Calendar.getInstance().getTimeInMillis()));
+    }
+    
+    private static void movimento(String movimento, String[] bancos, Timestamp data) {
+
+        Connection conn = null;
+        PreparedStatement ps = null;
+        int cont = 0;      
+        for (ConexaoProps c : ConexaoProps.values()) {
+            Conexao connection = new Conexao(ConexaoProps.getConexaoProps(c.idConexao));
+            conn = connection.getConnection();
+
+            try {
+                String sql = "insert into movimento (movimento, data, primeiroBanco, segundoBanco, terceiroBanco) values(?,?,?,?,?)";
+                ps = conn.prepareStatement(sql);
+                ps.setString(1, movimento);
+                ps.setTimestamp(2, data);
+                ps.setString(3, bancos.length > 0 ? bancos[0] : "");
+                ps.setString(4, bancos.length > 1 ? bancos[1] : "");
+                ps.setString(5, bancos.length > 2 ? bancos[2] : "");
+                ps.execute();
+            } catch (SQLException e) {
+                System.out.println("ERRO: " + e.getMessage());
+                if (conn != null) {
+                    try {
+                        conn.rollback();
+                    } catch (SQLException ex) {
+                        System.out.println("ERRO: " + ex.getMessage());
+                    }
+                }
             } finally {
                 if (ps != null) {
                     try {

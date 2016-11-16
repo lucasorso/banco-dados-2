@@ -13,12 +13,10 @@ import banco_de_dados_2_beans.ObjectsBD;
 import banco_de_dados_2_beans.Pais;
 import banco_de_dados_2_beans.Pessoas;
 import banco_de_dados_2_controller.ControleGenerico;
-import banco_de_dados_2_props.ConexaoProps;
 import banco_de_dados_2_props.TipoObjetoProps;
-import java.util.Random;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 /**
  *
@@ -32,11 +30,16 @@ public class ViewMain extends JFrame {
     private Cidade cidade;
     private Estado estado;
     private Pais pais;
-    
+
     private final int CADASTRO = 1;
     private final int ALTERACAO = 2;
-    
+
     public static JOptionPane dialog = new JOptionPane();
+
+    JScrollPane scroller1 = new JScrollPane(conexao1, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    JScrollPane scroller2 = new JScrollPane(conexao2, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    JScrollPane scroller3 = new JScrollPane(conexao3, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    JScrollPane scroller4 = new JScrollPane(conexao4, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
     /**
      * Creates new form ViewMain
@@ -131,12 +134,14 @@ public class ViewMain extends JFrame {
                 ObjectsBD obj = ControleGenerico.select(TipoObjetoProps.LOGRADOURO, campoTextoLogradouro.getText());
                 logradouro = (Logradouro) obj;
                 if (logradouro == null) {
+                    System.out.println("Falha ao recuperar do banco");
                     return false;
                 } else {
-                    System.out.println("Problema ao recuperar do banco de dados.");
+                    System.out.println("Recuperado do banco com sucesso");
                 }
             } else {
                 System.out.println("Usuairo optou por não inserir no banco de dados.");
+                return false;
             }
         } else {
             System.out.println("logradouro não é nulo.");
@@ -150,12 +155,14 @@ public class ViewMain extends JFrame {
                 ObjectsBD obj = ControleGenerico.select(TipoObjetoProps.BAIRRO, campoTextoBairro.getText());
                 bairro = (Bairro) obj;
                 if (bairro == null) {
+                    System.out.println("Falha ao recuperar do banco");
                     return false;
                 } else {
-                    System.out.println("Problema ao recuperar do banco de dados.");
+                    System.out.println("Recuperado do banco com sucesso");
                 }
             } else {
                 System.out.println("Usuairo optou por não inserir no banco de dados.");
+                return false;
             }
         } else {
             System.out.println("bairro não é nulo");
@@ -168,12 +175,14 @@ public class ViewMain extends JFrame {
                 ObjectsBD obj = ControleGenerico.select(TipoObjetoProps.CIDADE, campoTextoCidade.getText());
                 cidade = (Cidade) obj;
                 if (cidade == null) {
+                    System.out.println("Falha ao recuperar do banco");
                     return false;
                 } else {
-                    System.out.println("Problema ao recuperar do banco de dados.");
+                    System.out.println("Recuperado do banco com sucesso");
                 }
             } else {
                 System.out.println("Usuairo optou por não inserir no banco de dados.");
+                return false;
             }
         } else {
             System.out.println("cidade não é nulo");
@@ -186,12 +195,14 @@ public class ViewMain extends JFrame {
                 ObjectsBD obj = ControleGenerico.select(TipoObjetoProps.ESTADO, campoTextoEstado.getText());
                 estado = (Estado) obj;
                 if (estado == null) {
+                    System.out.println("Falha ao recuperar do banco");
                     return false;
                 } else {
-                    System.out.println("Problema ao recuperar do banco de dados.");
+                    System.out.println("Recuperado do banco com sucesso");
                 }
             } else {
                 System.out.println("Usuairo optou por não inserir no banco de dados.");
+                return false;
             }
         } else {
             System.out.println("estado não é nulo");
@@ -204,12 +215,14 @@ public class ViewMain extends JFrame {
                 ObjectsBD obj = ControleGenerico.select(TipoObjetoProps.PAIS, campoTextoPais.getText());
                 pais = (Pais) obj;
                 if (pais == null) {
+                    System.out.println("Falha ao recuperar do banco");
                     return false;
                 } else {
-                    System.out.println("Problema ao recuperar do banco de dados.");
+                    System.out.println("Recuperado do banco com sucesso");
                 }
             } else {
                 System.out.println("Usuairo optou por não inserir no banco de dados.");
+                return false;
             }
         } else {
             System.out.println("pais não é nulo");
@@ -233,9 +246,9 @@ public class ViewMain extends JFrame {
     }
 
     private void limparTudo() {
-        
+
         this.ProgressBarConexao.setValue(0);
-        
+
         this.pessoa = null;
         this.logradouro = null;
         this.bairro = null;
@@ -254,6 +267,7 @@ public class ViewMain extends JFrame {
         conexao1.setText("");
         conexao2.setText("");
         conexao3.setText("");
+        conexao4.setText("");
     }
 
     private boolean mostraMensagemObjetoNulo(String tabela, String valor) {
@@ -335,6 +349,7 @@ public class ViewMain extends JFrame {
         conexao2 = new javax.swing.JLabel();
         conexao3 = new javax.swing.JLabel();
         ProgressBarConexao = new javax.swing.JProgressBar();
+        conexao4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -353,7 +368,7 @@ public class ViewMain extends JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(195, 195, 195)
+                .addGap(246, 246, 246)
                 .addComponent(jLabel1)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -541,6 +556,8 @@ public class ViewMain extends JFrame {
 
         conexao3.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED));
 
+        conexao4.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -548,23 +565,26 @@ public class ViewMain extends JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(conexao2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(conexao1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(conexao3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(ProgressBarConexao, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(conexao1, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(conexao2, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(conexao3, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(ProgressBarConexao, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(conexao4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(conexao4, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
                 .addComponent(conexao1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(conexao2, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(conexao3, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ProgressBarConexao, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
+                .addComponent(ProgressBarConexao, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -703,6 +723,7 @@ public class ViewMain extends JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void botaoLogradouroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoLogradouroActionPerformed
@@ -724,6 +745,9 @@ public class ViewMain extends JFrame {
                 pessoa.setPais(pais);
 
                 ControleGenerico.insert(TipoObjetoProps.PESSOAS, pessoa.getNome(), pessoa);
+            } else {
+                JOptionPane.showMessageDialog(this, "Verifique as informações de cadastro\n Selecione-as do banco ou insira manualmente. ", "Atenção", JOptionPane.ERROR_MESSAGE);
+                System.out.println("Objetos nulos");
             }
         } else {
             JOptionPane.showMessageDialog(this, "Verifique os campos.", "Atenção", JOptionPane.ERROR_MESSAGE);
@@ -814,6 +838,7 @@ public class ViewMain extends JFrame {
     public static javax.swing.JLabel conexao1;
     public static javax.swing.JLabel conexao2;
     public static javax.swing.JLabel conexao3;
+    public static javax.swing.JLabel conexao4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
