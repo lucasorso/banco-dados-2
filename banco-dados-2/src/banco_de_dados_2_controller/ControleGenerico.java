@@ -171,7 +171,7 @@ public class ControleGenerico {
                 }
             }
         }
-        movimento("Select All", new String[]{ConexaoProps.getConexaoProps(conexaoAleatorio).toString()}, new Timestamp(Calendar.getInstance().getTimeInMillis()));
+        movimento("Seleciona todos", new String[]{ConexaoProps.getConexaoProps(conexaoAleatorio).toString()}, new Timestamp(Calendar.getInstance().getTimeInMillis()));
         return mObjectList;
     }
 
@@ -434,7 +434,7 @@ public class ControleGenerico {
                 }
             }
         }
-        movimento("select", new String[]{ConexaoProps.getConexaoProps(conexaoAleatorio).toString()}, new Timestamp(Calendar.getInstance().getTimeInMillis()));
+        movimento("Seleção", new String[]{ConexaoProps.getConexaoProps(conexaoAleatorio).toString()}, new Timestamp(Calendar.getInstance().getTimeInMillis()));
         return obj;
     }
 
