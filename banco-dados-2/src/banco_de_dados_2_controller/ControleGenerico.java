@@ -177,7 +177,8 @@ public class ControleGenerico {
 
     public static void insert(String tipoObjeto, String nome, Pessoas pessoa) {
         String banco1 = "banco1", banco2 = "banco2", banco3 = "banco3";
-
+        int ban1 = 1, ban2 = 2, ban3 = 3;
+        
         Random generator = new Random();
         int conexaoAleatorio = generator.nextInt(3) + 1;
 
@@ -185,19 +186,23 @@ public class ControleGenerico {
 
         ViewMain.ProgressBarConexao.setValue(0);
         ViewMain.ProgressBarConexao.setMaximum(3);
-
         int progress = 0;
+        
+        /*Aqui vamos definir a ordem*/
+        ban1 = conexaoAleatorio;
+        if (conexaoAleatorio == 1) {
+            ban2 = 3;
+            ban3 = 2;
+        } else if (conexaoAleatorio == 2) {
+            ban2 = 1;
+            ban3 = 3;
+        } else if (conexaoAleatorio == 3) {
+            ban2 = 1;
+            ban3 = 2;
+        }
+        
         /*For com a quantidade de valores*/
         for (ConexaoProps c : ConexaoProps.values()) {
-            /*Vai entrar no if caso valor seja igual ao recebido como parâmetro, 
-            caso contrário fara as outras conexões*/
-            if (c.idConexao == conexaoAleatorio) {
-                Conexao connection = new Conexao(ConexaoProps.getConexaoProps(conexaoAleatorio));
-                conn = Conexao.getConnection();
-
-            }
-            Conexao connection = new Conexao(ConexaoProps.getConexaoProps(c.idConexao));
-            conn = Conexao.getConnection();
 
             // update progress bar
             SwingUtilities.invokeLater(new Runnable() {
@@ -208,18 +213,25 @@ public class ControleGenerico {
                     ViewMain.ProgressBarConexao.setValue(this.progress);
                 }
             });
-            PreparedStatement ps = null;
 
             if (c.ordinal() == 0) {
+                Conexao connection = new Conexao(ConexaoProps.getConexaoProps(ban1));
+                conn = connection.getConnection();
                 ViewMain.conexao1.setText(connection.toString());
                 banco1 = connection.toString();
             } else if (c.ordinal() == 1) {
+                Conexao connection = new Conexao(ConexaoProps.getConexaoProps(ban2));
+                conn = connection.getConnection();
                 ViewMain.conexao2.setText(connection.toString());
                 banco2 = connection.toString();
             } else if (c.ordinal() == 2) {
+                Conexao connection = new Conexao(ConexaoProps.getConexaoProps(ban3));
+                conn = connection.getConnection();
                 ViewMain.conexao3.setText(connection.toString());
                 banco3 = connection.toString();
             }
+            
+            PreparedStatement ps = null;
 
             try {
                 switch (tipoObjeto) {
@@ -482,9 +494,11 @@ public class ControleGenerico {
         movimento("Delete", new String[]{banco1, banco2, banco3}, new Timestamp(Calendar.getInstance().getTimeInMillis()));
     }
 
-    public static void update(Pessoas pessoa){
-        
+    public static void update(Pessoas pessoa) {
+
         String banco1 = "banco1", banco2 = "banco2", banco3 = "banco3";
+        int ban1 = 1, ban2 = 2, ban3 = 3;
+
         Pessoas pessoa2 = new Pessoas();
         pessoa2 = pessoa;
 
@@ -495,17 +509,22 @@ public class ControleGenerico {
         ViewMain.ProgressBarConexao.setValue(0);
         ViewMain.ProgressBarConexao.setMaximum(3);
         int progress = 0;
+
+        /*Aqui vamos definir a ordem*/
+        ban1 = conexaoAleatorio;
+        if (conexaoAleatorio == 1) {
+            ban2 = 3;
+            ban3 = 2;
+        } else if (conexaoAleatorio == 2) {
+            ban2 = 1;
+            ban3 = 3;
+        } else if (conexaoAleatorio == 3) {
+            ban2 = 1;
+            ban3 = 2;
+        }
+
         /*For com a quantidade de valores*/
         for (ConexaoProps c : ConexaoProps.values()) {
-            /*Vai entrar no if caso valor seja igual ao recebido como parâmetro, 
-            caso contrário fara as outras conexões*/
-            if (c.idConexao == conexaoAleatorio) {
-                Conexao connection = new Conexao(ConexaoProps.getConexaoProps(conexaoAleatorio));
-                conn = connection.getConnection();
-
-            }
-            Conexao connection = new Conexao(ConexaoProps.getConexaoProps(c.idConexao));
-            conn = Conexao.getConnection();
 
             // update progress bar
             SwingUtilities.invokeLater(new Runnable() {
@@ -516,14 +535,20 @@ public class ControleGenerico {
                     ViewMain.ProgressBarConexao.setValue(this.progress);
                 }
             });
-            
+
             if (c.ordinal() == 0) {
+                Conexao connection = new Conexao(ConexaoProps.getConexaoProps(ban1));
+                conn = connection.getConnection();
                 ViewMain.conexao1.setText(connection.toString());
                 banco1 = connection.toString();
             } else if (c.ordinal() == 1) {
+                Conexao connection = new Conexao(ConexaoProps.getConexaoProps(ban2));
+                conn = connection.getConnection();
                 ViewMain.conexao2.setText(connection.toString());
                 banco2 = connection.toString();
             } else if (c.ordinal() == 2) {
+                Conexao connection = new Conexao(ConexaoProps.getConexaoProps(ban3));
+                conn = connection.getConnection();
                 ViewMain.conexao3.setText(connection.toString());
                 banco3 = connection.toString();
             }
@@ -571,12 +596,12 @@ public class ControleGenerico {
         }
         movimento("Alterção", new String[]{banco1, banco2, banco3}, new Timestamp(Calendar.getInstance().getTimeInMillis()));
     }
-    
+
     private static void movimento(String movimento, String[] bancos, Timestamp data) {
 
         Connection conn = null;
         PreparedStatement ps = null;
-        int cont = 0;      
+        int cont = 0;
         for (ConexaoProps c : ConexaoProps.values()) {
             Conexao connection = new Conexao(ConexaoProps.getConexaoProps(c.idConexao));
             conn = connection.getConnection();
