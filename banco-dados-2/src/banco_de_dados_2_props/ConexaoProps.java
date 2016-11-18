@@ -11,14 +11,15 @@ package banco_de_dados_2_props;
 
 public enum ConexaoProps {
     
-    CONEXAO_BANCO_1(1,"jdbc:mysql://localhost:3306/ly?rewriteBatchedStatements=true&relaxAutoCommit=true", "root", ""),
+    /*CONEXAO_BANCO_1(1,"jdbc:mysql://localhost:3306/ly?rewriteBatchedStatements=true&relaxAutoCommit=true", "root", ""),
     CONEXAO_BANCO_2(2,"jdbc:mysql://localhost:3306/ly1?rewriteBatchedStatements=true&relaxAutoCommit=true", "root", ""),
     CONEXAO_BANCO_3(3,"jdbc:mysql://localhost:3306/ly2?rewriteBatchedStatements=true&relaxAutoCommit=true", "root", "");
-    /*
-    CONEXAO_BANCO_1(1,"jdbc:mysql://localhost:3306/ly?rewriteBatchedStatements=true&relaxAutoCommit=true", "root", "123"),
-    CONEXAO_BANCO_2(2,"jdbc:mysql://172.16.82.5:3306/ly?rewriteBatchedStatements=true&relaxAutoCommit=true", "cont12", "123"),
-    CONEXAO_BANCO_3(3,"jdbc:mysql://172.16.82.4:3306/ly?rewriteBatchedStatements=true&relaxAutoCommit=true", "cont12", "comp2");
     */
+    
+    CONEXAO_BANCO_1(1,"jdbc:mysql://localhost:3306/ly?rewriteBatchedStatements=true&relaxAutoCommit=true", "root", "123"),
+    CONEXAO_BANCO_2(2,"jdbc:mysql://172.16.82.5:3306/ly2?rewriteBatchedStatements=true&relaxAutoCommit=true", "cont12", "123"),
+    CONEXAO_BANCO_3(3,"jdbc:mysql://172.16.82.4:3306/ly?rewriteBatchedStatements=true&relaxAutoCommit=true", "cont12", "comp2");
+    
     public final int idConexao;
     private final String caminhoBanco;
     private final String usuario;

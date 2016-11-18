@@ -358,7 +358,6 @@ public class ControleGenerico {
 
                         obj = bairro;
                     }
-
                 }
                 break;
                 case "cidade": {
@@ -395,7 +394,6 @@ public class ControleGenerico {
 
                         obj = estado;
                     }
-
                 }
                 break;
                 case "pais": {
@@ -417,7 +415,39 @@ public class ControleGenerico {
                 }
                 break;
                 case "pessoas": {
-                    System.out.println("Not now");
+                    ps = conn.prepareStatement("select * from pais where pessoas = ?;");
+                    ps.setString(1, nome);
+                    rs = ps.executeQuery();
+
+                    if (rs.next()) {
+                        Pessoas mPessoas = new Pessoas();
+                        Logradouro mLogradouro = new Logradouro();
+                        Bairro mBairro = new Bairro();
+                        Cidade mCidade = new Cidade();
+                        Estado mEstado = new Estado();
+                        Pais mPais = new Pais();
+
+                        mPessoas.setId(rs.getInt(1));
+                        mPessoas.setNome(rs.getString(2));
+                        mLogradouro.setId(rs.getInt(3));
+                        mBairro.setId(rs.getInt(4));
+                        mCidade.setId(rs.getInt(5));
+                        mEstado.setId(rs.getInt(6));
+                        mPais.setId(rs.getInt(7));
+                        mLogradouro.setNome(rs.getString(8));
+                        mBairro.setNome(rs.getString(9));
+                        mCidade.setNome(rs.getString(10));
+                        mEstado.setNome(rs.getString(11));
+                        mPais.setNome(rs.getString(12));
+
+                        mPessoas.setLogradouro(mLogradouro);
+                        mPessoas.setBairro(mBairro);
+                        mPessoas.setCidade(mCidade);
+                        mPessoas.setEstado(mEstado);
+                        mPessoas.setPais(mPais);
+                        
+                        obj = mPessoas;
+                    }
                 }
                 break;
             }

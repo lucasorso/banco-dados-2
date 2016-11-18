@@ -341,7 +341,6 @@ public class ViewMain extends JFrame {
         jPanel3 = new javax.swing.JPanel();
         botaoInclusao = new javax.swing.JButton();
         botaoAlteracao = new javax.swing.JButton();
-        botaoConsultar = new javax.swing.JButton();
         botaoLimparCampos = new javax.swing.JButton();
         botaoExcluir = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
@@ -492,13 +491,6 @@ public class ViewMain extends JFrame {
             }
         });
 
-        botaoConsultar.setText("Consultar");
-        botaoConsultar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botaoConsultarActionPerformed(evt);
-            }
-        });
-
         botaoLimparCampos.setText("Limpar");
         botaoLimparCampos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -522,13 +514,12 @@ public class ViewMain extends JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(botaoExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(botaoLimparCampos, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(botaoConsultar, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(botaoAlteracao, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(botaoInclusao, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(42, 42, 42))
         );
 
-        jPanel3Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {botaoAlteracao, botaoConsultar, botaoExcluir, botaoInclusao, botaoLimparCampos});
+        jPanel3Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {botaoAlteracao, botaoExcluir, botaoInclusao, botaoLimparCampos});
 
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -537,16 +528,14 @@ public class ViewMain extends JFrame {
                 .addComponent(botaoInclusao, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(botaoAlteracao, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(botaoConsultar, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(41, 41, 41)
                 .addComponent(botaoLimparCampos, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(botaoExcluir)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel3Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {botaoAlteracao, botaoConsultar, botaoExcluir, botaoInclusao, botaoLimparCampos});
+        jPanel3Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {botaoAlteracao, botaoExcluir, botaoInclusao, botaoLimparCampos});
 
         jPanel4.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -745,6 +734,8 @@ public class ViewMain extends JFrame {
                 pessoa.setPais(pais);
 
                 ControleGenerico.insert(TipoObjetoProps.PESSOAS, pessoa.getNome(), pessoa);
+                JOptionPane.showMessageDialog(this, "O cadastro de " + pessoa.getNome()+" foi realizado com suceso", "Atenção", JOptionPane.INFORMATION_MESSAGE);
+                limparTudo();
             } else {
                 JOptionPane.showMessageDialog(this, "Verifique as informações de cadastro\n Selecione-as do banco ou insira manualmente. ", "Atenção", JOptionPane.ERROR_MESSAGE);
                 System.out.println("Objetos nulos");
@@ -809,18 +800,11 @@ public class ViewMain extends JFrame {
         }
     }//GEN-LAST:event_botaoExcluirActionPerformed
 
-    private void botaoConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoConsultarActionPerformed
-        ViewCadastroAuxiliar cad1 = new ViewCadastroAuxiliar(TipoObjetoProps.PESSOAS, this);
-        ViewCadastroAuxiliar cad2 = new ViewCadastroAuxiliar(TipoObjetoProps.PESSOAS, this);
-        ViewCadastroAuxiliar cad3 = new ViewCadastroAuxiliar(TipoObjetoProps.PESSOAS, this);
-    }//GEN-LAST:event_botaoConsultarActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public static javax.swing.JProgressBar ProgressBarConexao;
     private javax.swing.JButton botaoAlteracao;
     private javax.swing.JButton botaoBairro;
     private javax.swing.JButton botaoCidade;
-    private javax.swing.JButton botaoConsultar;
     private javax.swing.JButton botaoEstado;
     private javax.swing.JButton botaoExcluir;
     private javax.swing.JButton botaoInclusao;

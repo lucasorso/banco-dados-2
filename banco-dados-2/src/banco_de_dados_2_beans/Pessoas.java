@@ -78,4 +78,24 @@ public class Pessoas extends ObjectsBD{
     public void setPais(Pais mPais) {
         this.mPais = mPais;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        String espaco = " ";
+        builder.append(_id);
+        builder.append(espaco);
+        builder.append(nome);
+        builder.append(espaco);
+        builder.append(mLogradouro.getNome());
+        builder.append(espaco);
+        builder.append(mBairro.getNome());
+        builder.append(espaco);
+        builder.append(mCidade.getNome());
+        builder.append(espaco);
+        builder.append(mEstado.getNome());
+        builder.append(espaco);
+        builder.append(mPais.getNome());
+        return builder.toString();
+    }
 }
